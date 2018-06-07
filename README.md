@@ -1,0 +1,2 @@
+# book
+The CCore Book
