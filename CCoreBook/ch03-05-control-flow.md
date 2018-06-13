@@ -10,7 +10,7 @@ Create a new project called *Branches* in your *projects* directory to explore t
 
 <span class="filename">Filename: src/Main.cc</span>
 
-```C#
+```csharp
 func void Main() {
     int number = 3;
 
@@ -39,7 +39,7 @@ condition was true
 
 Let’s try changing the value of `number` to a value that makes the condition `false` to see what happens:
 
-```C#,ignore
+```csharp,ignore
 int number = 7;
 ```
 
@@ -57,7 +57,7 @@ It’s also worth noting that the condition in this code *must* be a `bool`. If 
 
 <span class="filename">Filename: src/Main.cc</span>
 
-```C#,ignore
+```csharp,ignore
 func void Main() {
     int number = 3;
 
@@ -84,7 +84,7 @@ The error indicates that CCore expected a `bool` but got an integer. Unlike lang
 
 <span class="filename">Filename: src/Main.cc</span>
 
-```C#
+```csharp
 func void Main() {
     int number = 3;
 
@@ -102,7 +102,7 @@ You can have multiple conditions by combining `if` and `else` in an `else if` ex
 
 <span class="filename">Filename: src/Main.cc</span>
 
-```C#
+```csharp
 func void Main() {
     int number = 6;
 
@@ -136,7 +136,7 @@ When this program executes, it checks each `if` expression in turn and executes 
 
 As is the case with function bodies, the branches of an `if` expression can be a block of statements or a single expression. And as a single statement (as well as a statement block) is itself an expression evaluating to Void, which is also an expression in CCore, the previous example can be written:
 
-```C#
+```csharp
 func void Main() {
     int number = 6;
 
@@ -159,7 +159,7 @@ Because `if` is an expression, we can use it on the right side of an assignment 
 
 <span class="filename">Filename: src/Main.cc</span>
 
-```C#
+```csharp
 func void Main() {
     var condition = true;
     var number = if (condition) 5 else 6;
@@ -184,7 +184,7 @@ Remember that numbers by themselves are also expressions. In this case, the valu
 
 <span class="filename">Filename: src/Main.cc</span>
 
-```C#,ignore
+```csharp,ignore
 func void Main() {
     var condition = true;
 
@@ -224,7 +224,7 @@ As an example, change the *src/Main.cc* file in your *Loops* directory to look l
 
 <span class="filename">Filename: src/Main.cc</span>
 
-```C#,ignore
+```csharp,ignore
 func void Main() {
     while {
         WriteLine("again!");
@@ -258,7 +258,7 @@ However, this pattern is so common that CCore has a built-in language construct 
 
 <span class="filename">Filename: src/Main.cc</span>
 
-```C#
+```csharp
 func void Main() {
     mut var number = 3;
 
@@ -282,7 +282,7 @@ You could use the `while` construct to loop over the elements of a collection, s
 
 <span class="filename">Filename: src/Main.cc</span>
 
-```C#
+```csharp
 func void Main() {
     var a = [10, 20, 30, 40, 50];
     mut int index = 0;
@@ -318,7 +318,7 @@ As a more concise alternative, you can use a `for` loop and execute some code fo
 
 <span class="filename">Filename: src/Main.cc</span>
 
-```C#
+```csharp
 func void Main() {
     var a = [10, 20, 30, 40, 50];
 
@@ -340,7 +340,7 @@ Here’s what the countdown would look like using a `for` loop and another metho
 
 <span class="filename">Filename: src/Main.cc</span>
 
-```C#
+```csharp
 func void Main() {
     for (var number in (1..4).Reverse()) {
         WriteLine("{number}!");

@@ -1,266 +1,182 @@
 ## The Slice Type
 
-Another data type that does not have ownership is the *slice*. Slices let you
-reference a contiguous sequence of elements in a collection rather than the
-whole collection.
+Another data type that does not have ownership is the *slice*. Slices let you reference a contiguous sequence of elements in a collection rather than the whole collection.
 
-Here’s a small programming problem: write a function that takes a string and
-returns the first word it finds in that string. If the function doesn’t find a
-space in the string, the whole string must be one word, so the entire string
-should be returned.
+Here’s a small programming problem: write a function that takes a string and returns the first word it finds in that string. If the function doesn’t find a space in the string, the whole string must be one word, so the entire string should be returned.
 
 Let’s think about the signature of this function:
 
-```rust,ignore
-fn first_word(s: &String) -> ?
+```csharp,ignore
+func ? FirstWord(string &s)
 ```
 
-This function, `first_word`, has a `&String` as a parameter. We don’t want
-ownership, so this is fine. But what should we return? We don’t really have a
-way to talk about *part* of a string. However, we could return the index of the
-end of the word. Let’s try that, as shown in Listing 4-7:
+This function, `FirstWord`, has a `string&` as a parameter. We don’t want ownership, so this is fine. But what should we return? We don’t really have a way to talk about *part* of a string. However, we could return the index of the end of the word. Let’s try that, as shown in Listing 4-7:
 
-<span class="filename">Filename: src/main.rs</span>
+<span class="filename">Filename: src/Main.cc</span>
 
-```rust
-fn first_word(s: &String) -> usize {
-    let bytes = s.as_bytes();
-
-    for (i, &item) in bytes.iter().enumerate() {
-        if item == b' ' {
+```csharp
+func int FirstWord(string &s) {
+    for (var &item, int i in s) {
+        if (item == ' ') {
             return i;
         }
     }
-
-    s.len()
+    return s.Length;
 }
 ```
 
-<span class="caption">Listing 4-7: The `first_word` function that returns a
-byte index value into the `String` parameter</span>
+<span class="caption">Listing 4-7: The `FirstWord` function that returns a byte index value into the `string` parameter</span>
 
-Because we need to go through the `String` element by element and check whether
-a value is a space, we’ll convert our `String` to an array of bytes using the
-`as_bytes` method:
+Because we need to go through the `string` element by element and check whether a value is a space, we create an iterator over the array of bytes using the `for in` loop:
 
-```rust,ignore
-let bytes = s.as_bytes();
+```csharp,ignore
+for (var &item, int i in s) {
 ```
 
-Next, we create an iterator over the array of bytes using the `iter` method:
+We’ll discuss iterators in more detail in Chapter 13. For now, know that the `for in` implicitly calls the method `GetIterator` on the collection. `GetIterator` is a method that returns each element in a collection as part of a tuple. The first element of the tuple returned from `GetIterator` is a reference to the element, and the second element  is the index. This is a bit more convenient than calculating the index ourselves.
 
-```rust,ignore
-for (i, &item) in bytes.iter().enumerate() {
-```
+Because the `GetIterator` method returns a tuple, we can use patterns to destructure that tuple, just like everywhere else in CCore. So in the `for` loop, we specify a pattern that has `&item` for the single character in the tuple and `i` for the index in the tuple. Because we get a reference to the element, we use `&` in the pattern.
 
-We’ll discuss iterators in more detail in Chapter 13. For now, know that `iter`
-is a method that returns each element in a collection and that `enumerate`
-wraps the result of `iter` and returns each element as part of a tuple instead.
-The first element of the tuple returned from `enumerate` is the index, and the
-second element is a reference to the element. This is a bit more convenient
-than calculating the index ourselves.
+Inside the `for` loop, we search for the character that represents the space by using the `char` literal syntax. If we find a space, we return the position. Otherwise, we return the length of the string by using `s.Length`:
 
-Because the `enumerate` method returns a tuple, we can use patterns to
-destructure that tuple, just like everywhere else in Rust. So in the `for`
-loop, we specify a pattern that has `i` for the index in the tuple and `&item`
-for the single byte in the tuple. Because we get a reference to the element
-from `.iter().enumerate()`, we use `&` in the pattern.
-
-Inside the `for` loop, we search for the byte that represents the space by
-using the byte literal syntax. If we find a space, we return the position.
-Otherwise, we return the length of the string by using `s.len()`:
-
-```rust,ignore
-    if item == b' ' {
+```csharp,ignore
+    if (item == ' ') {
         return i;
     }
 }
-s.len()
+return s.Length;
 ```
 
-We now have a way to find out the index of the end of the first word in the
-string, but there’s a problem. We’re returning a `usize` on its own, but it’s
-only a meaningful number in the context of the `&String`. In other words,
-because it’s a separate value from the `String`, there’s no guarantee that it
-will still be valid in the future. Consider the program in Listing 4-8 that
-uses the `first_word` function from Listing 4-7:
+We now have a way to find out the index of the end of the first word in the string, but there’s a problem. We’re returning a `int` on its own, but it’s only a meaningful number in the context of the `string&`. In other words, because it’s a separate value from the `string`, there’s no guarantee that it will still be valid in the future. Consider the program in Listing 4-8 that uses the `FirstWord` function from Listing 4-7:
 
-<span class="filename">Filename: src/main.rs</span>
+<span class="filename">Filename: src/Main.cc</span>
 
-```rust
-# fn first_word(s: &String) -> usize {
-#     let bytes = s.as_bytes();
-#
-#     for (i, &item) in bytes.iter().enumerate() {
-#         if item == b' ' {
-#             return i;
-#         }
-#     }
-#
-#     s.len()
-# }
-#
-fn main() {
-    let mut s = String::from("hello world");
+```csharp
+func int FirstWord(string &s) {
+    for (var &item, int i in s) {
+        if item == ' ' {
+            return i;
+        }
+    }
+    s.Length;
+}
 
-    let word = first_word(&s); // word will get the value 5
+func void Main() {
+    mut var s = $"hello world";
 
-    s.clear(); // This empties the String, making it equal to ""
+    int word = FirstWord(&s); // word will get the value 5
+
+    s.Clear(); // This empties the string, making it equal to ""
 
     // word still has the value 5 here, but there's no more string that
     // we could meaningfully use the value 5 with. word is now totally invalid!
 }
 ```
 
-<span class="caption">Listing 4-8: Storing the result from calling the
-`first_word` function and then changing the `String` contents</span>
+<span class="caption">Listing 4-8: Storing the result from calling the `FirstWord` function and then changing the `string` contents</span>
 
-This program compiles without any errors and would also do so if we used `word`
-after calling `s.clear()`. Because `word` isn’t connected to the state of `s`
-at all, `word` still contains the value `5`. We could use that value `5` with
-the variable `s` to try to extract the first word out, but this would be a bug
-because the contents of `s` have changed since we saved `5` in `word`.
+This program compiles without any errors and would also do so if we used `word` after calling `s.Clear()`. Because `word` isn’t connected to the state of `s` at all, `word` still contains the value `5`. We could use that value `5` with the variable `s` to try to extract the first word out, but this would be a bug because the contents of `s` have changed since we saved `5` in `word`.
 
-Having to worry about the index in `word` getting out of sync with the data in
-`s` is tedious and error prone! Managing these indices is even more brittle if
-we write a `second_word` function. Its signature would have to look like this:
+Having to worry about the index in `word` getting out of sync with the data in `s` is tedious and error prone! Managing these indices is even more brittle if we write a `SecondWord` function. Its signature would have to look like this:
 
-```rust,ignore
-fn second_word(s: &String) -> (usize, usize) {
+```csharp,ignore
+func (int, int) SecondWord(string &s) {
 ```
 
-Now we’re tracking a starting *and* an ending index, and we have even more
-values that were calculated from data in a particular state but aren’t tied to
-that state at all. We now have three unrelated variables floating around that
-need to be kept in sync.
+Now we’re tracking a starting *and* an ending index, and we have even more values that were calculated from data in a particular state but aren’t tied to that state at all. We now have three unrelated variables floating around that need to be kept in sync.
 
-Luckily, Rust has a solution to this problem: string slices.
+Luckily, CCore has a solution to this problem: string slices.
 
 ### String Slices
 
-A *string slice* is a reference to part of a `String`, and it looks like this:
+A *string slice* is a reference to part of a `string`, and it looks like this:
 
-```rust
-let s = String::from("hello world");
+```csharp
+var s = $"hello world";
 
-let hello = &s[0..5];
-let world = &s[6..11];
+var &hello = &s[0:5];
+var &world = &s[6:11];
 ```
 
-This is similar to taking a reference to the whole `String` but with the extra
-`[0..5]` bit. Rather than a reference to the entire `String`, it’s a reference
-to a portion of the `String`. The `start..end` syntax is a range that begins at
-`start` and continues up to, but not including, `end`.
+This is similar to taking a reference to the whole `string` but with the extra `[0:5]` bit. Rather than a reference to the entire `string`, it’s a reference to a portion of the `string`. The `start:end` syntax is a range that begins at `start` and continues up to, but not including, `end`.
 
-We can create slices using a range within brackets by specifying
-`[starting_index..ending_index]`, where `starting_index` is the first position
-in the slice and `ending_index` is one more than the last position in the
-slice. Internally, the slice data structure stores the starting position and
-the length of the slice, which corresponds to `ending_index` minus
-`starting_index`. So in the case of `let world = &s[6..11];`, `world` would be
-a slice that contains a pointer to the 7th byte of `s` and a length value of 5.
+We can create slices using a range within brackets by specifying `[startingIndex:endingIndex]`, where `startingIndex` is the first position in the slice and `endingIndex` is one more than the last position in the slice. Internally, the slice data structure stores the starting position and the length of the slice, which corresponds to `endingIndex` minus `startingIndex`. So in the case of `var &world = &s[6:11];`, `world` would be a slice that contains a pointer to the 7th byte of `s` and a length value of 5.
 
 Figure 4-6 shows this in a diagram.
 
 <img alt="world containing a pointer to the 6th byte of String s and a length 5" src="img/trpl04-06.svg" class="center" style="width: 50%;" />
 
-<span class="caption">Figure 4-6: String slice referring to part of a
-`String`</span>
+<span class="caption">Figure 4-6: String slice referring to part of a `string`</span>
 
-With Rust’s `..` range syntax, if you want to start at the first index (zero),
-you can drop the value before the two periods. In other words, these are equal:
+With CCore’s `:` range syntax, if you want to start at the first index (zero), you can drop the value before the colon. In other words, these are equal:
 
-```rust
-let s = String::from("hello");
+```csharp
+var s = $"hello";
 
-let slice = &s[0..2];
-let slice = &s[..2];
+var &slice = &s[0:2];
+var &slice = &s[:2];
 ```
 
-By the same token, if your slice includes the last byte of the `String`, you
-can drop the trailing number. That means these are equal:
+By the same token, if your slice includes the last byte of the `string`, you can drop the trailing number. That means these are equal:
 
-```rust
-let s = String::from("hello");
+```csharp
+var s = $"hello";
 
-let len = s.len();
+int len = s.Length;
 
-let slice = &s[3..len];
-let slice = &s[3..];
+var &slice = &s[3:len];
+var &slice = &s[3:];
 ```
 
-You can also drop both values to take a slice of the entire string. So these
-are equal:
+You can also drop both values to take a slice of the entire string. So these are equal:
 
-```rust
-let s = String::from("hello");
+```csharp
+var s = $"hello";
 
-let len = s.len();
+int len = s.Length;
 
-let slice = &s[0..len];
-let slice = &s[..];
+var &slice = &s[0:len];
+var &slice = &s[:];
 ```
 
-> Note: String slice range indices must occur at valid UTF-8 character
-> boundaries. If you attempt to create a string slice in the middle of a
-> multibyte character, your program will exit with an error. For the purposes
-> of introducing string slices, we are assuming ASCII only in this section; a
-> more thorough discussion of UTF-8 handling is in the “Strings” section of
-> Chapter 8.
+> Note: String slice range indices must occur at valid UTF-8 character boundaries. If you attempt to create a string slice in the middle of a multibyte character, your program will exit with an error. For the purposes of introducing string slices, we are assuming ASCII only in this section; a more thorough discussion of UTF-8 handling is in the “Strings” section of Chapter 8.
 
-With all this information in mind, let’s rewrite `first_word` to return a
-slice. The type that signifies “string slice” is written as `&str`:
+With all this information in mind, let’s rewrite `FirstWord` to return a slice. The type that signifies “string slice” is written as `char[]&`:
 
-<span class="filename">Filename: src/main.rs</span>
+<span class="filename">Filename: src/Main.cc</span>
 
-```rust
-fn first_word(s: &String) -> &str {
-    let bytes = s.as_bytes();
-
-    for (i, &item) in bytes.iter().enumerate() {
-        if item == b' ' {
-            return &s[0..i];
+```csharp
+func char[] &FirstWord(string &s) {
+    for (var &item, int i in s) {
+        if (item == ' ') {
+            return &s[0:i];
         }
     }
-
-    &s[..]
+    return &s[:];
 }
 ```
 
-We get the index for the end of the word in the same way as we did in Listing
-4-7, by looking for the first occurrence of a space. When we find a space, we
-return a string slice using the start of the string and the index of the space
-as the starting and ending indices.
+We get the index for the end of the word in the same way as we did in Listing 4-7, by looking for the first occurrence of a space. When we find a space, we return a string slice using the start of the string and the index of the space as the starting and ending indices.
 
-Now when we call `first_word`, we get back a single value that is tied to the
-underlying data. The value is made up of a reference to the starting point of
-the slice and the number of elements in the slice.
+Now when we call `FirstWord`, we get back a single value that is tied to the underlying data. The value is made up of a reference to the starting point of the slice and the number of elements in the slice.
 
-Returning a slice would also work for a `second_word` function:
+Returning a slice would also work for a `SecondWord` function:
 
-```rust,ignore
-fn second_word(s: &String) -> &str {
+```csharp,ignore
+func char[] &SecondWord(string &s) {
 ```
 
-We now have a straightforward API that’s much harder to mess up, because the
-compiler will ensure the references into the `String` remain valid. Remember
-the bug in the program in Listing 4-8, when we got the index to the end of the
-first word but then cleared the string so our index was invalid? That code was
-logically incorrect but didn’t show any immediate errors. The problems would
-show up later if we kept trying to use the first word index with an emptied
-string. Slices make this bug impossible and let us know we have a problem with
-our code much sooner. Using the slice version of `first_word` will throw a
-compile time error:
+We now have a straightforward API that’s much harder to mess up, because the compiler will ensure the references into the `string` remain valid. Remember the bug in the program in Listing 4-8, when we got the index to the end of the first word but then cleared the string so our index was invalid? That code was logically incorrect but didn’t show any immediate errors. The problems would show up later if we kept trying to use the first word index with an emptied string. Slices make this bug impossible and let us know we have a problem with our code much sooner. Using the slice version of `FirstWord` will throw a compile time error:
 
-<span class="filename">Filename: src/main.rs</span>
+<span class="filename">Filename: src/Main.cc</span>
 
-```rust,ignore
-fn main() {
-    let mut s = String::from("hello world");
+```csharp,ignore
+func void Main() {
+    mut var s = $"hello world";
 
-    let word = first_word(&s);
+    var &word = &FirstWord(&s);
 
-    s.clear(); // Error!
+    s.Clear(); // Error!
 }
 ```
 
@@ -270,117 +186,92 @@ Here’s the compiler error:
 error[E0502]: cannot borrow `s` as mutable because it is also borrowed as immutable
  --> src/main.rs:6:5
   |
-4 |     let word = first_word(&s);
-  |                            - immutable borrow occurs here
+4 |     var &word = &FirstWord(&s);
+  |                             - immutable borrow occurs here
 5 |
-6 |     s.clear(); // Error!
+6 |     s.Clear(); // Error!
   |     ^ mutable borrow occurs here
 7 | }
   | - immutable borrow ends here
 ```
 
-Recall from the borrowing rules that if we have an immutable reference to
-something, we cannot also take a mutable reference. Because `clear` needs to
-truncate the `String`, it tries to take a mutable reference, which fails. Not
-only has Rust made our API easier to use, but it has also eliminated an entire
-class of errors at compile time!
+Recall from the borrowing rules that if we have an immutable reference to something, we cannot also take a mutable reference. Because `Clear` needs to truncate the `string`, it tries to take a mutable reference, which fails. Not only has CCore made our API easier to use, but it has also eliminated an entire class of errors at compile time!
 
 #### String Literals Are Slices
 
-Recall that we talked about string literals being stored inside the binary. Now
-that we know about slices, we can properly understand string literals:
+Recall that we talked about string literals being stored inside the binary. Now that we know about slices, we can properly understand string literals:
 
-```rust
-let s = "Hello, world!";
+```csharp
+var &s = "Hello, world!";
 ```
 
-The type of `s` here is `&str`: it’s a slice pointing to that specific point of
-the binary. This is also why string literals are immutable; `&str` is an
-immutable reference.
+The type of `&s` here is `char[]&`: it’s a slice pointing to that specific point of the binary. This is also why string literals are immutable; `&char[]` is an immutable reference.
 
 #### String Slices as Parameters
 
-Knowing that you can take slices of literals and `String`s leads us to one more
-improvement on `first_word`, and that’s its signature:
+Knowing that you can take slices of literals and `string`s leads us to one more improvement on `FirstWord`, and that’s its signature:
 
-```rust,ignore
-fn first_word(s: &String) -> &str {
+```csharp,ignore
+func char[] &FirstWord(string &s) {
 ```
 
-A more experienced Rustacean would write the following line instead because it
-allows us to use the same function on both `String`s and `&str`s:
+A more experienced CCore programmer would write the following line instead because it allows us to use the same function on both `string`s and `char[]&`s:
 
-```rust,ignore
-fn first_word(s: &str) -> &str {
+```csharp,ignore
+func char[] &FirstWord(char[] &s) {
 ```
 
-If we have a string slice, we can pass that directly. If we have a `String`, we
-can pass a slice of the entire `String`. Defining a function to take a string
-slice instead of a reference to a `String` makes our API more general and useful
-without losing any functionality:
+If we have a string slice, we can pass that directly. If we have a `string`, we can pass a slice of the entire `string`. Defining a function to take a string slice instead of a reference to a `string` makes our API more general and useful without losing any functionality:
 
-<span class="filename">Filename: src/main.rs</span>
+<span class="filename">Filename: src/Main.cc</span>
 
-```rust
-# fn first_word(s: &str) -> &str {
-#     let bytes = s.as_bytes();
-#
-#     for (i, &item) in bytes.iter().enumerate() {
-#         if item == b' ' {
-#             return &s[0..i];
-#         }
-#     }
-#
-#     &s[..]
-# }
-fn main() {
-    let my_string = String::from("hello world");
+```csharp
+func char[] &FirstWord(char[] &s) {
+    for (var &item, int i in s) {
+        if (item == ' ') {
+            return &s[0:i];
+        }
+    }
+    return &s[:];
+}
 
-    // first_word works on slices of `String`s
-    let word = first_word(&my_string[..]);
+func void Main() {
+    var myString = $"hello world";
 
-    let my_string_literal = "hello world";
+    // FirstWord works on slices of `string`s
+    var &word = &FirstWord(&myString[:]);
 
-    // first_word works on slices of string literals
-    let word = first_word(&my_string_literal[..]);
+    var &myStringLiteral = "hello world";
+
+    // FirstWord works on slices of string literals
+    var &word = &FirstWord(&myStringLiteral[:]);
 
     // Because string literals *are* string slices already,
     // this works too, without the slice syntax!
-    let word = first_word(my_string_literal);
+    var &word = &FirstWord(&myStringLiteral);
 }
 ```
 
 ### Other Slices
 
-String slices, as you might imagine, are specific to strings. But there’s a
-more general slice type, too. Consider this array:
+String slices, as you might imagine, are specific to strings. But there’s a more general slice type, too. Consider this array:
 
-```rust
-let a = [1, 2, 3, 4, 5];
+```csharp
+var a = [1, 2, 3, 4, 5];
 ```
 
-Just as we might want to refer to a part of a string, we might want to refer
-to part of an array. We’d do so like this:
+Just as we might want to refer to a part of a string, we might want to refer to part of an array. We’d do so like this:
 
-```rust
-let a = [1, 2, 3, 4, 5];
+```csharp
+var a = [1, 2, 3, 4, 5];
 
-let slice = &a[1..3];
+var &slice = &a[1:3];
 ```
 
-This slice has the type `&[i32]`. It works the same way as string slices do, by
-storing a reference to the first element and a length. You’ll use this kind of
-slice for all sorts of other collections. We’ll discuss these collections in
-detail when we talk about vectors in Chapter 8.
+This slice has the type `int[]&`. It works the same way as string slices do, by storing a reference to the first element and a length. You’ll use this kind of slice for all sorts of other collections. We’ll discuss these collections in detail when we talk about vectors in Chapter 8.
 
 ## Summary
 
-The concepts of ownership, borrowing, and slices ensure memory safety in Rust
-programs at compile time. The Rust language gives you control over your memory
-usage in the same way as other systems programming languages, but having the
-owner of data automatically clean up that data when the owner goes out of scope
-means you don’t have to write and debug extra code to get this control.
+The concepts of ownership, borrowing, and slices ensure memory safety in CCore programs at compile time. The CCore language gives you control over your memory usage in the same way as other systems programming languages, but having the owner of data automatically clean up that data when the owner goes out of scope means you don’t have to write and debug extra code to get this control.
 
-Ownership affects how lots of other parts of Rust work, so we’ll talk about
-these concepts further throughout the rest of the book. Let’s move on to
-Chapter 5 and look at grouping pieces of data together in a `struct`.
+Ownership affects how lots of other parts of CCore work, so we’ll talk about these concepts further throughout the rest of the book. Let’s move on to Chapter 5 and look at grouping pieces of data together in a `class`.

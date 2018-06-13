@@ -6,7 +6,7 @@ CCore code uses *Pascal case* as the conventional style for function. In Pascal 
 
 <span class="filename">Filename: src/Main.cc</span>
 
-```C#
+```csharp
 func void Main() {
     WriteLine("Hello, world!");
 
@@ -43,7 +43,7 @@ The following rewritten version of `AnotherFunction` shows what parameters look 
 
 <span class="filename">Filename: src/Main.cc</span>
 
-```C#
+```csharp
 func void Main() {
     AnotherFunction(5);
 }
@@ -71,7 +71,7 @@ When you want a function to have multiple parameters, separate the parameter dec
 
 <span class="filename">Filename: src/Main.cc</span>
 
-```C#
+```csharp
 func void Main() {
     AnotherFunction(5, 6);
 }
@@ -109,7 +109,7 @@ Creating a variable and assigning a value to it is a statement. In Listing 3-1, 
 
 <span class="filename">Filename: src/Main.cc</span>
 
-```C#
+```csharp
 func void Main() {
     var y = 6;
 }
@@ -123,7 +123,7 @@ Statements do not return values. Therefore, you can’t assign an assignment sta
 
 <span class="filename">Filename: src/Main.cc</span>
 
-```C#,ignore
+```csharp,ignore
 func Main() {
     var x = (var y = 6);
 }
@@ -152,7 +152,7 @@ Functions can return values to the code that calls them. We don’t name return 
 
 <span class="filename">Filename: src/Main.cc</span>
 
-```C#
+```csharp
 func int Five() {
     return 5;
 }
@@ -179,7 +179,7 @@ The value of x + y is: 8
 
 The `5` in `Five` is the function’s return value, which is why the return type is `int`. Let’s examine this in more detail. There are two important bits: first, the line `int x = Five();` shows that we’re using the return value of a function to initialize a variable. Because the function `Five` returns a `5`, that line is the same as the following:
 
-```C#
+```csharp
 int x = 5;
 ```
 
@@ -189,7 +189,7 @@ Let’s look at another example:
 
 <span class="filename">Filename: src/Main.cc</span>
 
-```C#
+```csharp
 func void Main() {
     int x = PlusOne(5);
 
@@ -204,7 +204,7 @@ Running this code will print `The value of x is: 6`. But if we place a the expre
 
 <span class="filename">Filename: src/Main.cc</span>
 
-```C#,ignore
+```csharp,ignore
 func void Main() {
     int x = PlusOne(5);
 

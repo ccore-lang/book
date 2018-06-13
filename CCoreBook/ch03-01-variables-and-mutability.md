@@ -8,7 +8,7 @@ Then, in your new *Variables* directory, open *src/Main.cc* and replace its code
 
 <span class="filename">Filename: src/Main.cc</span>
 
-```C#,ignore
+```csharp,ignore
 func void Main() {
     var x = 5;
     WriteLine($"The value of x is: {x}");
@@ -44,7 +44,7 @@ For example, let’s change *src/Main.cc* to the following:
 
 <span class="filename">Filename: src/Main.cc</span>
 
-```C#
+```csharp
 func void Main() {
     mut var x = 5;
     WriteLine($"The value of x is: {x}");
@@ -82,7 +82,7 @@ The last difference is that constants may be set only to a constant expression, 
 
 Here’s an example of a constant declaration where the constant’s name is `MaxPoints` and its value is set to 100,000. (CCore’s constant naming convention is to use the first letter of each word in uppercase):
 
-```C#
+```csharp
 const int MaxPoints = 100_000;
 ```
 

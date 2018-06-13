@@ -52,7 +52,7 @@ Here’s an example that shows floating-point numbers in action:
 
 <span class="filename">Filename: src/Main.cc</span>
 
-```C#
+```csharp
 func void Main() {
     var x = 2.0; // double
     var y = 3.0f; // float
@@ -67,7 +67,7 @@ CCore supports the basic mathematical operations you’d expect for all of the n
 
 <span class="filename">Filename: src/Main.cc</span>
 
-```C#
+```csharp
 func void Main() {
     // addition
     int sum = 5 + 10;
@@ -94,7 +94,7 @@ As in most other programming languages, a Boolean type in CCore has two possible
 
 <span class="filename">Filename: src/Main.cc</span>
 
-```C#
+```csharp
 func void Main() {
     var t = true;
     bool f = false; // with explicit type annotation
@@ -111,7 +111,7 @@ So far we’ve worked only with numbers, but CCore supports letters too. CCore�
 
 <span class="filename">Filename: src/Main.cc</span>
 
-```C#
+```csharp
 func void Main() {
     char c = 'z';
     char z = 'ℤ';
@@ -133,7 +133,7 @@ We create a tuple by writing a comma-separated list of values inside parentheses
 
 <span class="filename">Filename: src/Main.cc</span>
 
-```C#
+```csharp
 func void Main() {
     (int, double, byte) tup = (500, 6.4, 1);
 }
@@ -143,7 +143,7 @@ The variable `tup` binds to the entire tuple, because a tuple is considered a si
 
 <span class="filename">Filename: src/Main.cc</span>
 
-```C#
+```csharp
 func void Main() {
     var tup = (500, 6.4, 1);
     (var x, var y, var z) = tup;
@@ -157,7 +157,7 @@ In addition to destructuring through pattern matching, we can access a tuple ele
 
 <span class="filename">Filename: src/Main.cc</span>
 
-```C#
+```csharp
 func void Main() {
     (int, double, byte) x = (500, 6.4, 1);
     var fiveHundred = x.0;
@@ -176,7 +176,7 @@ In CCore, the values going into an array are written as a comma-separated list i
 
 <span class="filename">Filename: src/Main.cc</span>
 
-```C#
+```csharp
 func void Main() {
     var a = [1, 2, 3, 4, 5];
 }
@@ -186,14 +186,14 @@ Arrays are useful when you want your data allocated on the stack rather than the
 
 An example of when you might want to use an array rather than a list is in a program that needs to know the names of the months of the year. It’s very unlikely that such a program will need to add or remove months, so you can use an array because you know it will always contain 12 items:
 
-```C#
+```csharp
 var months = ["January", "February", "March", "April", "May", "June", "July",
               "August", "September", "October", "November", "December"];
 ```
 
 Arrays have an interesting type; it looks like this: `type[number]`. For example:
 
-```C#
+```csharp
 int[5] a = [1, 2, 3, 4, 5];
 ```
 
@@ -205,7 +205,7 @@ An array is a single chunk of memory allocated on the stack. You can access elem
 
 <span class="filename">Filename: src/Main.cc</span>
 
-```C#
+```csharp
 func void Main() {
     var a = [1, 2, 3, 4, 5];
 
@@ -222,7 +222,7 @@ What happens if you try to access an element of an array that is past the end of
 
 <span class="filename">Filename: src/Main.cc</span>
 
-```C#,ignore
+```csharp,ignore
 func void Main() {
     var a = [1, 2, 3, 4, 5];
     int index = 10;
